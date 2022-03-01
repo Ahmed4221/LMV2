@@ -1,4 +1,5 @@
 
+from numpy import save
 from utils import *
 from pdf2image import convert_from_path
 def main():
@@ -14,6 +15,8 @@ def main():
         data.to_json(os.path.join(PROCESSED_DATA_JSON_PATH,json_file_path), orient='records', lines=True)
     if DRAW:
         draw_image(image)
+    
+    save_pickel()
 
 
 if __name__ == '__main__':
