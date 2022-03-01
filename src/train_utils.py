@@ -1,5 +1,5 @@
 from os import listdir
-from simplejson import load
+# from simplejson import load
 from torch.utils.data import Dataset
 import torch
 from PIL import Image
@@ -7,9 +7,10 @@ import pandas as pd
 from transformers import LayoutLMv2Processor
 from constants import *
 from torch.utils.data import DataLoader
-from transformers import LayoutLMv2ForTokenClassification, AdamW
 import torch
-from tqdm.notebook import tqdm
+
+
+processor = LayoutLMv2Processor.from_pretrained("microsoft/layoutlmv2-base-uncased", revision="no_ocr")
 
 
 train_labels = pd.read_pickle('pickel_file.pkl')
@@ -79,12 +80,11 @@ def load_pickle():
 def get_dataloader():
 
     train = load_pickle()
-    processor = LayoutLMv2Processor.from_pretrained("microsoft/layoutlmv2-base-uncased", revision="no_ocr")
-
+    
     train_dataset = CORDDataset(annotations=train,
                             image_dir=IMG_DIR, 
                             processor=processor)
 
     train_dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True)
 
-    return train_dataloader
+    return train_dataloader, train_dataset
