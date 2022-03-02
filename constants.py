@@ -13,3 +13,5 @@ PROCESSED_DATA_JSON_PATH = 'data/processed_json'
 if not os.path.exists(PROCESSED_DATA_JSON_PATH):
     os.mkdir(PROCESSED_DATA_JSON_PATH)
 DRAW = False
+
+IMG_DIR = 'data/converted_data/'

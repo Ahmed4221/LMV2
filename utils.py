@@ -5,32 +5,49 @@ from transformers import LayoutLMv2FeatureExtractor
 import pandas as pd
 import cv2
 import numpy as np
+import pickle
 
 unique_rows = []    # For row_id function
 
-def unnormalize_box(bbox, width, height):
+pkl_word = []
+pkl_box = []
+pkl_label = []
+
+
+def unnormalize_box(bbox, width, height, OPTION):
     
+    # data = [
+        #  int(width * (bbox[0] / 1000)),
+        #  int(height * (bbox[1] / 1000)),
+        #  int(width * (bbox[2] / 1000)),
+        #  int(height * (bbox[3] / 1000)),
+    #  ]
     data = [
-         int(width * (bbox[0] / 1000)),
-         int(height * (bbox[1] / 1000)),
-         int(width * (bbox[2] / 1000)),
-         int(height * (bbox[3] / 1000)),
-     ]
+        bbox[0],
+        bbox[1],
+        bbox[2],
+        bbox[3]
+    ]
+    
+    if OPTION=='Quad':
     
     # converting to 8 co-ordinate system (FOR THE CORD!!!)
 
-    quad = {
-        "x2": data[2],
-        "y3": data[3],
-        "x3": data[2],
-        "y4": data[3],
-        "x1": data[0],
-        "y1": data[1],
-        "x4": data[0],
-        "y2": data[1]
-    }
+        quad = {
+            "x2": data[2],
+            "y3": data[3],
+            "x3": data[2],
+            "y4": data[3],
+            "x1": data[0],
+            "y1": data[1],
+            "x4": data[0],
+            "y2": data[1]
+        }
 
-    return quad
+        return quad
+    
+    else:
+        return data
 
 
 def get_row_id(line, row_id):
@@ -84,12 +101,16 @@ def get_data(filename):
     encoding['words'] = encoding['words'][0]
     encoding['boxes'] = encoding['boxes'][0]    
     
-    true_boxes = [unnormalize_box(box, width, height) for box in encoding['boxes']]
-
+    true_boxes_q = [unnormalize_box(box, width, height, 'Quad') for box in encoding['boxes']]
+    true_boxes_c = [unnormalize_box(box, width, height, 'Corner') for box in encoding['boxes']]
     word = []
     row_id = 0
 
-    for box, text in zip(true_boxes, encoding['words']):
+    word_examples = []
+    box_examples = []
+    label_examples = []
+
+    for box, text, c_box in zip(true_boxes_q, encoding['words'], true_boxes_c):
         
         row_id = get_row_id(box['y3'], row_id)
 
@@ -100,10 +121,17 @@ def get_data(filename):
         'groud_id': 0
         })
 
+        word_examples.append(text)
+        box_examples.append(c_box)
+        label_examples.append('O')
+
+
     df = pd.DataFrame(list(zip(word)), 
     columns=['words'])
     
-    # print(df.head())
+    pkl_word.append(word_examples)
+    pkl_box.append(box_examples)
+    pkl_label.append(label_examples)
 
     return df, img
 
@@ -114,11 +142,6 @@ def create_box(bbox, label, image):
     y1 = bbox['y1']
     x2 = bbox['x3']
     y2 = bbox['y3']
-
-    # print(x1)
-    # print(y1)
-    # print(x2)
-    # print(y2)
 
     image = cv2.rectangle(image, (x1, y1), (x2, y2), (36, 255, 12), 1)
     cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 2)
@@ -165,3 +188,8 @@ def getListOfFiles(dirName,allowed_extensions = ALLOWED_EXTENSIONS):
                 allFiles.append(fullPath)
                 
     return allFiles
+
+def save_pickel():
+    
+    with open('pickel_file.pkl', 'wb') as t:
+        pickle.dump([pkl_word, pkl_label, pkl_box], t)
