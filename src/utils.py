@@ -102,26 +102,24 @@ def get_data(filename):
     label_examples = []
     image_data = []
 
-    for box, text, norm_boxes in zip(encoding['boxes'], encoding['words'], true_boxes):
+    for box, text, unnorm_boxes in zip(encoding['boxes'], encoding['words'], true_boxes):
         
         quad_box = convert_to_quad(box)
 
         row_id = get_row_id(quad_box['y3'], row_id)
 
-        # img_copy = img.copy()
+        img_copy = img.copy()
         
-        # img_copy = create_box(box, text, img_copy)
-        # img_copy = cv2.resize(img_copy, (700, 700))
+        img_copy = create_box(unnorm_boxes, text, img_copy)
+        img_copy = cv2.resize(img_copy, (700, 700))
         
-        # cv2.imshow('img', img_copy)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
+        cv2.imshow('img', img_copy)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         
-        # print(ground_labels)
+        print(ground_labels)
         
-        # category = input("Please enter the category: ")
-
-        category = '1'
+        category = input("Please enter the category: ")
 
         label = ground_labels[category]
 
@@ -133,7 +131,7 @@ def get_data(filename):
         }) # For the CORD Dataset
 
         image_data.append({
-            'box': norm_boxes,
+            'box': unnorm_boxes,
             'text': text
         }) # For processing images
 
