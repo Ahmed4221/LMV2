@@ -12,7 +12,7 @@ pkl_word = []
 pkl_box = []
 pkl_label = []
 
-    
+
 def unnormalize_box(bbox, width, height):
     
     data = [
@@ -119,8 +119,15 @@ def get_data(filename):
         
         print(ground_labels)
         
-        category = input("Please enter the category: ")
-
+        valid = False
+        while valid == False:
+            try:
+                category = input("Please enter the category: ")
+                label = ground_labels[category]
+                valid = True
+            except:
+                print("Invalid key, try again")
+        
         label = ground_labels[category]
 
         row = ({'quad': quad_box,
@@ -169,13 +176,16 @@ def create_box(bbox, label, image):
 
     return image
 
+
 def save_json(data_file, file_name):
     json_file_path = file_name+"_processed.json"
     data_file.to_json(os.path.join(PROCESSED_DATA_JSON_PATH,json_file_path), orient='records', lines=True)
 
+
 def save_labelled_image(image, file_name):
     image_file_name = file_name+"_processed.jpg"
     cv2.imwrite(os.path.join(PROCESSED_DATA_PATH,image_file_name), image)
+
 
 def get_labelled_image(file):
 
@@ -197,6 +207,7 @@ def draw_image(image):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def getListOfFiles(dirName,allowed_extensions = ALLOWED_EXTENSIONS):    
     # create a list of file and sub directories 
     # names in the given directory 
@@ -216,7 +227,8 @@ def getListOfFiles(dirName,allowed_extensions = ALLOWED_EXTENSIONS):
                 
     return allFiles
 
+
 def save_pickel():
     
-    with open('pickel_file.pkl', 'wb') as t:
+    with open('train_pickle.pkl', 'wb') as t:
         pickle.dump([pkl_word, pkl_label, pkl_box], t)

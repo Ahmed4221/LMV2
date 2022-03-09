@@ -34,6 +34,7 @@ class CORDDataset(Dataset):
         self.words, self.labels, self.boxes = annotations
         self.image_dir = image_dir
         self.image_file_names = [f for f in listdir(image_dir)]
+        print(self.image_file_names)
         self.processor = processor
 
     def __len__(self):
