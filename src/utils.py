@@ -171,8 +171,8 @@ def create_box(bbox, label, image):
     x2 = bbox['x3']
     y2 = bbox['y3']
 
-    image = cv2.rectangle(image, (x1, y1), (x2, y2), (36, 255, 12), 1)
-    cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (36, 255, 12), 2)
+    image = cv2.rectangle(image, (x1, y1), (x2, y2), (12, 12, 255), 1)
+    cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (12, 12, 255), 2)
 
     return image
 
