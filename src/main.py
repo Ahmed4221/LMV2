@@ -3,9 +3,9 @@ from utils import *
 from pdf2image import convert_from_path
 def main():
     files = getListOfFiles(RAW_DATA_PATH)
-    
+    file_order = []
     for file in files:
-        print(file)    
+        file_order.append(file)    
         file_name = file.split('/')[-1].split('.')[0]
 
         print(os.path.join(TRAIN_IMG_DIR, file_name))
@@ -22,7 +22,8 @@ def main():
     if DRAW:
         draw_image(image)
     
-    
+    df = pd.DataFrame(file_order)
+    df.to_csv('file_order.csv', index=False)
 
 
 if __name__ == '__main__':

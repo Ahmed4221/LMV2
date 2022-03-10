@@ -38,14 +38,15 @@ ground_labels = {'0': 'month_heading',
                 '15': 'unit_price_excl._VAT_heading',
                 '16': 'unit_price_excl._VAT_value',
                 '17': 'total_value',
-                '18': 'grand_total',
-                '19': 'VAT_rate_heading',
-                '20': 'VAT_rate_value',
-                '21': 'applicable_VAT_percentage_heading',
-                '22': 'applicable_VAT_percentage_value',
-                '23': 'discount_heading',
-                '24': 'discount_value',
-                '25':'Extra'
+                '18': 'grand_total_heading',
+                '19': 'grand_total_value',
+                '20': 'VAT_rate_heading',
+                '21': 'VAT_rate_value',
+                '22': 'applicable_VAT_percentage_heading',
+                '23': 'applicable_VAT_percentage_value',
+                '24': 'discount_heading',
+                '25': 'discount_value',
+                '26':'Extra'
                 }
 
 our_labels = [
