@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>inference module &#8212; LMV2 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-inference">
+<span id="inference-module"></span><h1>inference module<a class="headerlink" href="#module-inference" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="inference.eval">
+<span class="sig-prename descclassname"><span class="pre">inference.</span></span><span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inference.html#eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inference.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function acts as a controller for inference
+Param : model
+Param-type : torch trained model over our dataset
+Param : test_dataloader
+Param-type : Object of CORD-Dataset class
+Returns : preds_val, out_label_ids, labels</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="inference.results_test">
+<span class="sig-prename descclassname"><span class="pre">inference.</span></span><span class="sig-name descname"><span class="pre">results_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_label_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inference.html#results_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inference.results_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function produces evaluation metrices for the test results
+Param : preds
+Param-type : list of prediction
+Param : out_label_ids
+Param-type : list of ids of actual outputs
+Param : labels
+Param-type :  list of actual labels
+Returns : classification report of results</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="inference.run_inference">
+<span class="sig-prename descclassname"><span class="pre">inference.</span></span><span class="sig-name descname"><span class="pre">run_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inference.html#run_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inference.run_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function Runs main inference over the test files stored in test dir
+Params : model
+Param-type : torch model
+Returns : None</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">LMV2</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Ahmed.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/inference.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

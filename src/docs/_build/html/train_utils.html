@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>train_utils module &#8212; LMV2 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-train_utils">
+<span id="train-utils-module"></span><h1>train_utils module<a class="headerlink" href="#module-train_utils" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="train_utils.get_all_labels">
+<span class="sig-prename descclassname"><span class="pre">train_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_pickle_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/train_utils.html#get_all_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#train_utils.get_all_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gets list of labels from the pickle file of labeled data
+Param : train_pickle_file
+Param-type : pickle file of multiple jsons with list of bbox, word and cat.
+Returns : list of labels</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="train_utils.prepare_dataloader">
+<span class="sig-prename descclassname"><span class="pre">train_utils.</span></span><span class="sig-name descname"><span class="pre">prepare_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickle_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/train_utils.html#prepare_dataloader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#train_utils.prepare_dataloader" title="Permalink to this definition">¶</a></dt>
+<dd><p>This create torch data loader object from CORDDataset Class
+Param : pickle_file_path
+Param-type : string, path of pickle file
+Param : image_dir
+Param-type : string, path of image_dir
+Returns : dataloader</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="train_utils.train_model">
+<span class="sig-prename descclassname"><span class="pre">train_utils.</span></span><span class="sig-name descname"><span class="pre">train_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/train_utils.html#train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#train_utils.train_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function trains the model
+Param : train_dataloader
+Param-type : torch data-loader, Dataloader object of training data
+Param : labels
+Param-type : list, list of labels
+Returns : model</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">LMV2</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Ahmed.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/train_utils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
