@@ -1,7 +1,7 @@
 from collections import Counter
 from statistics import mode
 import pandas as pd
-from transformers import LayoutLMv2ForTokenClassification, AdamW
+from transformers import LayoutLMv2ForTokenClassification, AdamW, AutoModel
 import torch
 from tqdm.notebook import tqdm
 from constants import *
@@ -91,5 +91,5 @@ def train_model(train_dataloader,labels):
 
     # model.save_pretrained("/content/drive/MyDrive/LayoutLMv2/Tutorial notebooks/CORD/Checkpoints")
     # model.save_pretrained(MODEL_SAVE_PATH)
-    torch.save(model, os.path.join(MODEL_SAVE_PATH,PATH))
+    model.save_pretrained(TRAINED_MODEL) #os.path.join(TRAINED_MODEL, MODEL_PATH))
     return model

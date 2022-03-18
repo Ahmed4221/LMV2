@@ -15,25 +15,32 @@ if not os.path.exists(PROCESSED_DATA_PATH):
 PROCESSED_DATA_JSON_PATH = 'data/processed_train_json'
 if not os.path.exists(PROCESSED_DATA_JSON_PATH):
     os.mkdir(PROCESSED_DATA_JSON_PATH)
-MODEL_SAVE_PATH = 'models/'
+MODEL_SAVE_PATH = 'model/'
 if not os.path.exists(MODEL_SAVE_PATH):
     os.mkdir(MODEL_SAVE_PATH)
 PICKLE_SAVE_PATH = 'pkl_files/'
 if not os.path.exists(PICKLE_SAVE_PATH):
     os.mkdir(PICKLE_SAVE_PATH)
+PREDICTED_IMG_DIR = 'data/predicted_images'
+if not os.path.exists(PREDICTED_IMG_DIR):
+    os.mkdir(PREDICTED_IMG_DIR)
+TRAINED_MODEL = 'model/finetuned/model.pt'
+if not os.path.exists('model/finetuned'):
+    os.mkdir('model/finetuned')
 
-TRAIN_IMG_DIR = 'data/converted_train_data'
-TEST_IMG_DIR = 'data/converted_test_data'
-PATH = "entire_model.pt"
+TRAIN_IMG_DIR = 'data/train/image'
+TEST_IMG_DIR = 'data/test/image'
 
 # --------------------  BOOL CONTROLLERS ------------------------------------------
 DRAW = False
 LABEL_DATA = False
 TRAIN = False
-TEST = True
+TEST = False
+DRAW_PREDICT = True
 
 # --------------------  CONST VARIABLES ------------------------------------------
-TRAINED_MODEL = ''
+
+MODEL_PATH = ('model/finetuned')
 TRAIN_PICKLE_NAME = 'train_pickle.pkl'
 TRAIN_PICKLE_NAME = os.path.join(PICKLE_SAVE_PATH,TRAIN_PICKLE_NAME)
 TEST_PICKLE_NAME = 'test_pickle.pkl'
@@ -66,37 +73,6 @@ ground_labels = {'0': 'month_heading',
                 '24': 'discount_value',
                 '25':'Extra'
                 }
-
-our_labels = [
-    'company name'
-    'address'
-    'serial code'
-    'article code'
-    'table heading'
-    'invoice heading'
-    'invoice code'
-    'client code'
-    'date heading'
-    'date'
-    'product heading'
-    'product'
-    'quantity'
-    'price per unit'
-    'VAT'
-    'total VAT'
-    'amount'
-    'total amount'
-    'contact heading'
-    'email'
-    'tel'
-    'symbol'
-    'signature'
-    'website'
-    'IBAN'
-    'discount'
-    'no text'
-    'bar code'
-]
 
 MODEL_CONFIG = {
         'global_step' : 0,
