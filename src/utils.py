@@ -6,14 +6,20 @@ import cv2
 import numpy as np
 import pickle
 
-unique_rows = []    # For row_id function
 
-pkl_word = []
-pkl_box = []
-pkl_label = []
 
 
 def unnormalize_box(bbox, width, height):
+    """ 
+    This function un-normalizes the bbox of words
+    Param : bbox
+    Param-type : list, list having coordinates of bounding box
+    Param : width
+    Param-type : float, width of bbox
+    Param : height
+    Param-type : float, height of bbox
+    Returns : quad
+    """
     
     data = [
          int(width * (bbox[0] / 1000)),
@@ -44,7 +50,7 @@ def convert_to_quad(data):
     return quad
 
 
-def get_row_id(line, row_id):
+def get_row_id(line, row_id,unique_rows):
     
     if len(unique_rows) == 0:
         id = row_id + 1
@@ -79,7 +85,7 @@ def get_row_id(line, row_id):
     return id
 
 
-def get_data(filename):
+def get_data(filename,pkl_word,pkl_box,pkl_label,unique_rows):
 
     img = cv2.cvtColor(np.array(filename), cv2.COLOR_BGR2RGB)
     height = img.shape[0] 
@@ -106,7 +112,7 @@ def get_data(filename):
         
         quad_box = convert_to_quad(box)
 
-        row_id = get_row_id(quad_box['y3'], row_id)
+        row_id = get_row_id(quad_box['y3'], row_id,unique_rows)
 
         img_copy = img.copy()
         
@@ -187,9 +193,9 @@ def save_labelled_image(image, file_name):
     cv2.imwrite(os.path.join(PROCESSED_DATA_PATH,image_file_name), image)
 
 
-def get_labelled_image(file):
+def get_labelled_image(file,pkl_word,pkl_box,pkl_label,unique_rows):
 
-    data, image, image_data = get_data(filename=file)
+    data, image, image_data = get_data(file,pkl_word,pkl_box,pkl_label,unique_rows)
 
     for i in range(len(image_data)):
         
@@ -228,7 +234,6 @@ def getListOfFiles(dirName,allowed_extensions = ALLOWED_EXTENSIONS):
     return allFiles
 
 
-def save_pickel():
-    
-    with open('train_pickle.pkl', 'wb') as t:
+def save_pickel(pkl_word,pkl_box,pkl_label):
+    with open(TRAIN_PICKLE_NAME, 'wb') as t:
         pickle.dump([pkl_word, pkl_label, pkl_box], t)

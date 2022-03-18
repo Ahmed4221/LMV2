@@ -1,91 +1,95 @@
-from os import listdir
-# from simplejson import load
-from torch.utils.data import Dataset
-import torch
-from PIL import Image
+from collections import Counter
+from statistics import mode
 import pandas as pd
-from transformers import LayoutLMv2Processor
-from constants import *
-from torch.utils.data import DataLoader
+from transformers import LayoutLMv2ForTokenClassification, AdamW
 import torch
+from tqdm.notebook import tqdm
+from constants import *
+from dataset import *
+from transformers import LayoutLMv2Processor
+from torch.utils.data import DataLoader
 
+def get_all_labels(train_pickle_file):
+    """ 
+    This function gets list of labels from the pickle file of labeled data
+    Param : train_pickle_file
+    Param-type : pickle file of multiple jsons with list of bbox, word and cat.
+    Returns : list of labels
+    """
+    all_labels = [item for sublist in train_pickle_file[1] for item in sublist]
+    Counter(all_labels)
+    return all_labels
 
-processor = LayoutLMv2Processor.from_pretrained("microsoft/layoutlmv2-base-uncased", revision="no_ocr")
+def prepare_dataloader(pickle_file_path,image_dir):
+    """ 
+    This create torch data loader object from CORDDataset Class
+    Param : pickle_file_path
+    Param-type : string, path of pickle file
+    Param : image_dir
+    Param-type : string, path of image_dir
+    Returns : dataloader
+    """
+    pickle_file = pd.read_pickle(pickle_file_path)
+    processor = LayoutLMv2Processor.from_pretrained("microsoft/layoutlmv2-base-uncased", revision="no_ocr")
+    dataset = CORDDataset(annotations=pickle_file,
+                                image_dir=image_dir, 
+                                processor=processor,
+                                label2id = label2id)
+    dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
+    return dataloader,overall_labels,dataset,processor
 
-
-train_labels = pd.read_pickle('pickel_file.pkl')
-
-labels = [item for sublist in train_labels[1] for item in sublist]
-
-label2id = {label: idx for idx, label in enumerate(labels)}
-id2label = {idx: label for idx, label in enumerate(labels)}
-
-
-class CORDDataset(Dataset):
-    """CORD dataset."""
-
-    def __init__(self, annotations, image_dir, processor=None, max_length=512):
-        """
-        Args:
-            annotations (List[List]): List of lists containing the word-level annotations (words, labels, boxes).
-            image_dir (string): Directory with all the document images.
-            processor (LayoutLMv2Processor): Processor to prepare the text + image.
-        """
-        self.words, self.labels, self.boxes = annotations
-        self.image_dir = image_dir
-        self.image_file_names = [f for f in listdir(image_dir)]
-        print(self.image_file_names)
-        self.processor = processor
-
-    def __len__(self):
-        return len(self.image_file_names)
-
-    def __getitem__(self, idx):
-        # first, take an image
-        item = self.image_file_names[idx]
-        image = Image.open(self.image_dir + item).convert("RGB")
-
-        # get word-level annotations 
-        words = self.words[idx]
-        boxes = self.boxes[idx]
-        word_labels = self.labels[idx]
-
-        assert len(words) == len(boxes) == len(word_labels)
-        
-        word_labels = [label2id[label] for label in word_labels]
-        # use processor to prepare everything
-        encoded_inputs = self.processor(image, words, boxes=boxes, word_labels=word_labels, 
-                                        padding="max_length", truncation=True, 
-                                        return_tensors="pt")
-        
-        # remove batch dimension
-        for k,v in encoded_inputs.items():
-          encoded_inputs[k] = v.squeeze()
-
-        assert encoded_inputs.input_ids.shape == torch.Size([512])
-        assert encoded_inputs.attention_mask.shape == torch.Size([512])
-        assert encoded_inputs.token_type_ids.shape == torch.Size([512])
-        assert encoded_inputs.bbox.shape == torch.Size([512, 4])
-        assert encoded_inputs.image.shape == torch.Size([3, 224, 224])
-        assert encoded_inputs.labels.shape == torch.Size([512]) 
-      
-        return encoded_inputs
-
-
-def load_pickle():
-
-    data = pd.read_pickle('pickel_file.pkl')
-    return data
-
-
-def get_dataloader():
-
-    train = load_pickle()
+def train_model(train_dataloader,labels):
+    """ 
+    This function trains the model
+    Param : train_dataloader
+    Param-type : torch data-loader, Dataloader object of training data
+    Param : labels
+    Param-type : list, list of labels
+    Returns : model
+    """
     
-    train_dataset = CORDDataset(annotations=train,
-                            image_dir=IMG_DIR, 
-                            processor=processor)
+    model = LayoutLMv2ForTokenClassification.from_pretrained('microsoft/layoutlmv2-base-uncased',
+                                                                      num_labels=len(labels))
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
+    optimizer = AdamW(model.parameters(), lr=MODEL_CONFIG['lr'])
 
-    train_dataloader = DataLoader(train_dataset, batch_size=2, shuffle=True)
+    global_step = MODEL_CONFIG['global_step']
+    num_train_epochs = MODEL_CONFIG['num_train_epochs']
 
-    return train_dataloader, train_dataset
+    #put the model in training mode
+    model.train() 
+    for epoch in tqdm(range(num_train_epochs)):  
+        # print("Epoch:", epoch)
+        over_all_loss = None
+        for batch in (train_dataloader):
+            # get the inputs;
+            input_ids = batch['input_ids'].to(device)
+            bbox = batch['bbox'].to(device)
+            image = batch['image'].to(device)
+            attention_mask = batch['attention_mask'].to(device)
+            token_type_ids = batch['token_type_ids'].to(device)
+            labels = batch['labels'].to(device)
+
+            # zero the parameter gradients
+            optimizer.zero_grad()
+            
+            # forward + backward + optimize
+            outputs = model(input_ids=input_ids,
+                            bbox=bbox,
+                            image=image,
+                            attention_mask=attention_mask,
+                            token_type_ids=token_type_ids,
+                            labels=labels) 
+            
+            loss = outputs.loss
+            over_all_loss = loss.item()
+            loss.backward()
+            optimizer.step()
+            global_step += 1
+        print(f"Loss after epoch {epoch} is: {over_all_loss}")
+
+    # model.save_pretrained("/content/drive/MyDrive/LayoutLMv2/Tutorial notebooks/CORD/Checkpoints")
+    # model.save_pretrained(MODEL_SAVE_PATH)
+    torch.save(model, os.path.join(MODEL_SAVE_PATH,PATH))
+    return model
